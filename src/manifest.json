@@ -76,10 +76,10 @@
   "browser_action": {
     "default_icon": {
       "16": "/images/extension/icon-16.png",
-      "19": "/images/extension/icon-19.png",
+      "19": "/images/extension/icon-128.png",
       "24": "/images/extension/icon-24.png",
       "32": "/images/extension/icon-32.png",
-      "38": "/images/extension/icon-38.png",
+      "38": "/images/extension/icon-256.png",
       "48": "/images/extension/icon-48.png"
     },
     "default_title": "Omnivore Save Article"

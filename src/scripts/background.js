@@ -62,6 +62,7 @@ const omnivoreGraphqlURL = process.env.OMNIVORE_GRAPHQL_URL
 let completedRequests = {}
 
 function getCurrentTab() {
+  console.log('background-30',)
   return new Promise((resolve) => {
     browserApi.tabs.query(
       {
@@ -76,6 +77,7 @@ function getCurrentTab() {
 }
 
 function uploadFile({ id, uploadSignedUrl }, contentType, contentObjUrl) {
+  console.log('background-29',)
   return fetch(contentObjUrl)
     .then((r) => r.blob())
     .then((blob) => {
@@ -94,6 +96,7 @@ function uploadFile({ id, uploadSignedUrl }, contentType, contentObjUrl) {
 }
 
 async function uploadFileRequest(url, contentType) {
+  console.log('background-28',)
   const data = JSON.stringify({
     query: `mutation UploadFileRequest($input: UploadFileRequestInput!) {
       uploadFileRequest(input:$input) {
@@ -154,6 +157,7 @@ async function savePdfFile(
   contentType,
   contentObjUrl
 ) {
+  console.log('background-27',)
   const toolbarCtx = {
     omnivoreURL,
     originalURL: url,
@@ -200,6 +204,7 @@ async function savePdfFile(
 }
 
 function clearClickCompleteState() {
+  console.log('background-26',)
   getStorageItem('postInstallClickComplete').then(
     (postInstallClickComplete) => {
       if (postInstallClickComplete) {
@@ -210,6 +215,7 @@ function clearClickCompleteState() {
 }
 
 async function saveUrl(currentTab, url) {
+  console.log('background-25',)
   const requestId = uuidv4()
   await saveApiRequest(currentTab, SAVE_URL_QUERY, 'saveUrl', {
     source: 'extension',
@@ -219,6 +225,7 @@ async function saveUrl(currentTab, url) {
 }
 
 async function saveApiRequest(currentTab, query, field, input) {
+  console.log('background-24',)
   const toolbarCtx = {
     omnivoreURL,
     originalURL: input.url,
@@ -298,6 +305,7 @@ async function saveApiRequest(currentTab, query, field, input) {
 }
 
 function updateClientStatus(tabId, target, status, message) {
+  console.log('background-23',)
   browserApi.tabs.sendMessage(tabId, {
     action: ACTIONS.UpdateStatus,
     payload: {
@@ -309,6 +317,7 @@ function updateClientStatus(tabId, target, status, message) {
 }
 
 async function editTitleRequest(tabId, request, completedResponse) {
+  console.log('background-22',)
   return updatePageTitle(
     omnivoreGraphqlURL + 'graphql',
     completedResponse.responseId,
@@ -326,6 +335,7 @@ async function editTitleRequest(tabId, request, completedResponse) {
 }
 
 async function addNoteRequest(tabId, request, completedResponse) {
+  console.log('background-21',)
   const noteId = uuidv4()
   const shortId = nanoid(8)
 
@@ -348,6 +358,7 @@ async function addNoteRequest(tabId, request, completedResponse) {
 }
 
 async function setLabelsRequest(tabId, request, completedResponse) {
+  console.log('background-20',)
   return setLabels(
     omnivoreGraphqlURL + 'graphql',
     completedResponse.responseId,
@@ -370,6 +381,7 @@ async function setLabelsRequest(tabId, request, completedResponse) {
 }
 
 async function archiveRequest(tabId, request, completedResponse) {
+  console.log('background-19',)
   return archive(omnivoreGraphqlURL + 'graphql', completedResponse.responseId)
     .then(() => {
       updateClientStatus(tabId, 'extra', 'success', 'Archived')
@@ -382,6 +394,7 @@ async function archiveRequest(tabId, request, completedResponse) {
 }
 
 async function deleteRequest(tabId, request, completedResponse) {
+  console.log('background-18',)
   return deleteItem(
     omnivoreGraphqlURL + 'graphql',
     completedResponse.responseId
@@ -397,6 +410,7 @@ async function deleteRequest(tabId, request, completedResponse) {
 }
 
 async function processEditTitleRequest(tabId, pr) {
+  console.log('background-17',)
   const completed = completedRequests[pr.clientRequestId]
   handled = await editTitleRequest(tabId, pr, completed)
   console.log('processEditTitleRequest: ', handled)
@@ -404,6 +418,7 @@ async function processEditTitleRequest(tabId, pr) {
 }
 
 async function processAddNoteRequest(tabId, pr) {
+  console.log('background-16',)
   const completed = completedRequests[pr.clientRequestId]
   const handled = await addNoteRequest(tabId, pr, completed)
   console.log('processAddNoteRequest: ', handled)
@@ -411,6 +426,7 @@ async function processAddNoteRequest(tabId, pr) {
 }
 
 async function processSetLabelsRequest(tabId, pr) {
+  console.log('background-14',)
   const completed = completedRequests[pr.clientRequestId]
   const handled = await setLabelsRequest(tabId, pr, completed)
   console.log('processSetLabelsRequest: ', handled)
@@ -418,6 +434,7 @@ async function processSetLabelsRequest(tabId, pr) {
 }
 
 async function processArchiveRequest(tabId, pr) {
+  console.log('background-13',)
   const completed = completedRequests[pr.clientRequestId]
   const handled = await archiveRequest(tabId, pr, completed)
   console.log('processArchiveRequest: ', handled)
@@ -425,6 +442,7 @@ async function processArchiveRequest(tabId, pr) {
 }
 
 async function processDeleteRequest(tabId, pr) {
+  console.log('background-12',)
   const completed = completedRequests[pr.clientRequestId]
   const handled = await deleteRequest(tabId, pr, completed)
   console.log('processDeleteRequest: ', handled)
@@ -432,6 +450,7 @@ async function processDeleteRequest(tabId, pr) {
 }
 
 async function saveArticle(tab, createHighlight) {
+  console.log('background-11',)
   browserApi.tabs.sendMessage(
     tab.id,
     {
@@ -441,6 +460,9 @@ async function saveArticle(tab, createHighlight) {
       },
     },
     async (response) => {
+
+      console.log('saveArticle--browserApi.tabs.sendMessage==>',response)
+
       if (!response || typeof response !== 'object') {
         // In the case of an invalid response, we attempt
         // to just save the URL. This can happen in Firefox
@@ -502,6 +524,7 @@ async function saveArticle(tab, createHighlight) {
 
 // credit: https://stackoverflow.com/questions/21535233/injecting-multiple-scripts-through-executescript-in-google-chrome
 function executeScripts(tabId, scriptsArray, onCompleteCallback) {
+  console.log('background-10',)
   function createCallback(tabId, injectDetails, innerCallback) {
     return function () {
       browserScriptingApi.executeScript(tabId, injectDetails, innerCallback)
@@ -519,6 +542,7 @@ function executeScripts(tabId, scriptsArray, onCompleteCallback) {
 }
 
 function cleanupTabState(tabId) {
+  console.log('background-9',)
   getStorage().then(function (result) {
     const itemsToRemove = []
     const keys = Object.keys(result)
@@ -542,6 +566,7 @@ function setupTimedInterval(
   delay = 1000,
   timeout = 10500
 ) {
+  console.log('background-8',)
   const intervalId = setInterval(timerCallback, delay)
   const timeoutId = setTimeout(() => {
     clearInterval(intervalId)
@@ -554,6 +579,7 @@ function setupTimedInterval(
 }
 
 async function clearPreviousIntervalTimer(tabId) {
+  console.log('background-7',)
   const prevIntervalId = await getStorageItem(tabId + '_saveInProgress')
   if (!prevIntervalId) return
 
@@ -568,6 +594,7 @@ async function clearPreviousIntervalTimer(tabId) {
 }
 
 function extensionSaveCurrentPage(tabId, createHighlight) {
+  console.log('background-6',)
   createHighlight = createHighlight ? true : false
   /* clear any previous timers on each click */
   clearPreviousIntervalTimer(tabId)
@@ -639,16 +666,19 @@ function extensionSaveCurrentPage(tabId, createHighlight) {
 }
 
 function checkAuthOnFirstClickPostInstall(tabId) {
+  console.log('background-5',)
   return Promise.resolve(true)
 }
 
 function handleActionClick() {
+  console.log('background-4',)
   executeAction(function (currentTab) {
     extensionSaveCurrentPage(currentTab.id)
   })
 }
 
 function executeAction(action) {
+  console.log('background-3',)
   getCurrentTab().then((currentTab) => {
     browserApi.tabs.sendMessage(
       currentTab.id,
@@ -685,6 +715,7 @@ function executeAction(action) {
 }
 
 function getActionableState(tab) {
+  console.log('background-2',)
   if (tab.status !== 'complete') return false
 
   const tabUrl = tab.pendingUrl || tab.url
@@ -703,6 +734,7 @@ function getActionableState(tab) {
 }
 
 function init() {
+  console.log('background-1',)
   browserApi.tabs.onActivated.addListener(({ tabId }) => {
     // Due to a chrome bug, chrome.tabs.* may run into an error because onActivated is triggered too fast.
     function checkCurrentTab() {

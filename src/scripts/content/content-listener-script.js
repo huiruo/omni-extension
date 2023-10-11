@@ -24,6 +24,9 @@
     ({ action, payload }, sender, sendResponse) => {
       if (action === ACTIONS.GetContent) {
         const createHighlight = payload && payload.createHighlight
+
+        console.log('browserApi.runtime.onMessage.addListener===开始调用prepareContent-C3')
+
         prepareContent(createHighlight).then((pageContent) => {
           sendResponse({
             type: pageContent.type,
