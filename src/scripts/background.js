@@ -225,7 +225,9 @@ async function saveUrl(currentTab, url) {
 }
 
 async function saveApiRequest(currentTab, query, field, input) {
-  console.log('background-24',)
+
+  console.log('background-24-run',{ currentTab, query, field, input })
+
   const toolbarCtx = {
     omnivoreURL,
     originalURL: input.url,
@@ -248,9 +250,12 @@ async function saveApiRequest(currentTab, query, field, input) {
     },
   })
 
+  console.log('background-24-run-2-开始请求：',{ url: omnivoreGraphqlURL + 'graphql',requestBody })
+
   try {
     const result = await gqlRequest(omnivoreGraphqlURL + 'graphql', requestBody)
     if (result[field]['errorCodes']) {
+      console.log('background-24-run-3-请求返回-错误处理：')
       if (result[field]['errorCodes'][0] === 'UNAUTHORIZED') {
         browserApi.tabs.sendMessage(currentTab.id, {
           action: ACTIONS.UpdateStatus,
@@ -276,9 +281,19 @@ async function saveApiRequest(currentTab, query, field, input) {
     }
 
     const url = result[field] ? result[field]['url'] : undefined
+
+    console.log('background-24-run-3-请求返回成功：',result,'url',url)
+
     const requestId = result[field]
       ? result[field]['clientRequestId']
       : undefined
+
+    console.log('background-24-run-3-请求返回成功处理：',{
+          readerURL: url,
+          responseId: requestId,
+          requestId: toolbarCtx.requestId,
+    })
+
     browserApi.tabs.sendMessage(currentTab.id, {
       action: ACTIONS.UpdateStatus,
       payload: {
@@ -450,7 +465,7 @@ async function processDeleteRequest(tabId, pr) {
 }
 
 async function saveArticle(tab, createHighlight) {
-  console.log('background-11',)
+  console.log('background-11-saveArticle',{ tab, createHighlight })
   browserApi.tabs.sendMessage(
     tab.id,
     {
@@ -460,13 +475,12 @@ async function saveArticle(tab, createHighlight) {
       },
     },
     async (response) => {
-
-      console.log('saveArticle--browserApi.tabs.sendMessage==>',response)
-
+      console.log('background-saveArticle-run-1:',response)
       if (!response || typeof response !== 'object') {
         // In the case of an invalid response, we attempt
         // to just save the URL. This can happen in Firefox
         // with PDF URLs
+        console.log('background-saveArticle-run-2:')
         await saveUrl(tab, tab.url)
         return
       }
@@ -481,6 +495,7 @@ async function saveArticle(tab, createHighlight) {
 
       switch (type) {
         case 'html': {
+          console.log('background-saveArticle-run-html:')
           await saveApiRequest(tab, SAVE_PAGE_QUERY, 'savePage', {
             source: 'extension',
             clientRequestId: requestId,
@@ -491,6 +506,7 @@ async function saveArticle(tab, createHighlight) {
           break
         }
         case 'url': {
+          console.log('background-saveArticle-run-url:',)
           await saveApiRequest(tab, SAVE_URL_QUERY, 'saveUrl', {
             source: 'extension',
             clientRequestId: requestId,
@@ -499,6 +515,7 @@ async function saveArticle(tab, createHighlight) {
           break
         }
         case 'pdf': {
+          console.log('background-saveArticle-run-pdf:',)
           const uploadResult = await savePdfFile(
             tab,
             encodeURI(tab.url),
@@ -618,6 +635,7 @@ function extensionSaveCurrentPage(tabId, createHighlight) {
         if (onSuccess && typeof onSuccess === 'function') {
           onSuccess()
         }
+        console.log('background-saveArticle-1',)
         await saveArticle(tab, createHighlight)
         try {
           await updateLabelsCache(omnivoreGraphqlURL + 'graphql', tab)
@@ -651,6 +669,7 @@ function extensionSaveCurrentPage(tabId, createHighlight) {
            * post timeout, we proceed to save as some sites (people.com) take a
            * long time to reach complete state and remain in interactive state.
            */
+          console.log('background-saveArticle-2',)
           await saveArticle(tab, createHighlight)
         })
       },
@@ -673,6 +692,7 @@ function checkAuthOnFirstClickPostInstall(tabId) {
 function handleActionClick() {
   console.log('background-4',)
   executeAction(function (currentTab) {
+    console.log('background-4-1',)
     extensionSaveCurrentPage(currentTab.id)
   })
 }
@@ -837,6 +857,7 @@ function init() {
     contexts: ['page'],
     onclick: async function (obj) {
       executeAction(function (currentTab) {
+        console.log('extensionSaveCurrentPage-2',)
         extensionSaveCurrentPage(currentTab.id)
       })
     },
@@ -848,6 +869,7 @@ function init() {
     contexts: ['selection'],
     onclick: async function (obj) {
       executeAction(function (currentTab) {
+      console.log('extensionSaveCurrentPage-1',)
         extensionSaveCurrentPage(currentTab.id, true)
       })
     },
