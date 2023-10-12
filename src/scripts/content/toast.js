@@ -60,6 +60,7 @@
   }
 
   async function createToastContainer() {
+    console.log('toast.js-32-createToastContainer',)
     const file = await fetch(browserApi.runtime.getURL('views/toast.html'))
     const html = await file.text()
 
@@ -84,6 +85,7 @@
   }
 
   function displayLoggedOutView() {
+    console.log('toast.js-31-displayLoggedOutView',)
     cancelAutoDismiss()
     updatePageStatus('failure')
     toggleRow('#omnivore-logged-out-row')
@@ -110,11 +112,13 @@
   }
 
   function cancelAutoDismiss() {
+    console.log('toast.js-30-cancelAutoDismiss',)
     doNotHide = true
     if (hideToastTimeout) clearTimeout(hideToastTimeout)
   }
 
   function updateStatus(payload) {
+    console.log('toast.js-29-updateStatus',)
     if (!currentToastEl) {
       console.log('no statusBox to update')
       return
@@ -182,6 +186,7 @@
   }
 
   function showToolbar(payload) {
+    console.log('toast.js-28-showToolbar',)
     ctx = payload.ctx
 
     showToolbarAsync(payload).catch((err) =>
@@ -190,6 +195,7 @@
   }
 
   function updateLabelsFromCache(payload) {
+    console.log('toast.js-27-updateLabelsFromCache',)
     ;(async () => {
       await getStorageItem('labels').then((cachedLabels) => {
         if (labels) {
@@ -209,6 +215,7 @@
   }
 
   async function showToolbarAsync(payload) {
+    console.log('toast.js-26-showToolbarAsync',)
     const bodyEl = document.body
     if (!bodyEl) return
 
@@ -236,6 +243,7 @@
   }
 
   function updatePageStatus(status) {
+    console.log('toast.js-25-updatePageStatus',)
     const statusBox = currentToastEl.shadowRoot.querySelector(
       '.omnivore-toast-statusBox'
     )
@@ -268,6 +276,7 @@
   }
 
   function updateStatusBox(boxId, state, message, dismissAfter) {
+    console.log('toast.js-24-updateStatusBox',)
     const statusBox = currentToastEl.shadowRoot.querySelector(boxId)
     const image = (() => {
       switch (state) {
@@ -296,6 +305,7 @@
   }
 
   function toggleRow(rowId) {
+    console.log('toast.js-23-toggleRow',)
     if (!currentToastEl) {
       // its possible this was called after closing the extension
       // so just return
@@ -319,6 +329,7 @@
   }
 
   function connectButtons(root) {
+    console.log('toast.js-22-connectButtons',)
     const btns = [
       { id: '#omnivore-toast-add-note-btn', func: addNote },
       { id: '#omnivore-toast-edit-title-btn', func: editTitle },
@@ -356,6 +367,7 @@
   }
 
   function connectKeyboard(root) {
+    console.log('toast.js-21-connectKeyboard',)
     root.addEventListener('keydown', (e) => {
       switch (e.key) {
         case 'r':
@@ -384,6 +396,7 @@
   }
 
   function createLabelRow(label) {
+    console.log('toast.js-20-createLabelRow',)
     const element = document.createElement('button')
     const dot = document.createElement('span')
     dot.style = 'width:10px;height:10px;border-radius:1000px;'
@@ -426,6 +439,7 @@
   }
 
   function toggleLabel(event, labelId) {
+    console.log('toast.js-19-toggleLabel',)
     const labelSelected = event.target.getAttribute('data-label-selected')
 
     if (!labelId || !labelSelected) {
@@ -455,6 +469,7 @@
   }
 
   function backspaceOnLastItem(labelsList, labelsInput) {
+    console.log('toast.js-18-backspaceOnLastItem',)
     // Get the last <li> item before the <li><input item
     const lastItem =
       labelsInput.closest('#label-entry-item').previousElementSibling
@@ -472,6 +487,7 @@
   }
 
   function labelEditorClickHandler(event) {
+    console.log('toast.js-18-labelEditorClickHandler',)
     const input = event.target.querySelector('#omnivore-edit-label-input')
     if (input && event.target != input) {
       input.focus()
@@ -480,6 +496,7 @@
   }
 
   function clearBackspacedLabels(form) {
+    console.log('toast.js-17-clearBackspacedLabels',)
     const selected = form.querySelectorAll('.label[data-label-backspaced="on"]')
     selected.forEach((node) => {
       node.removeAttribute('data-label-backspaced')
@@ -487,6 +504,7 @@
   }
 
   function labelEditorKeyDownHandler(event) {
+    console.log('toast.js-16-labelEditorKeyDownHandler',)
     event.cancelBubble = true
     if (event.stopPropogation) {
       event.stopPropogation()
@@ -562,6 +580,7 @@
   }
 
   function noteCacheKey() {
+    console.log('toast.js-15-noteCacheKey',)
     return document.location
       ? `cached-note-${document.location.href}`
       : undefined
@@ -569,6 +588,8 @@
 
   async function addNote() {
     const cachedNoteKey = noteCacheKey()
+
+    console.log('toast.js-15-addNote',)
 
     cancelAutoDismiss()
     toggleRow('#omnivore-add-note-row')
@@ -642,6 +663,7 @@
   }
 
   function editTitle() {
+    console.log('toast.js-14-editTitle',)
     cancelAutoDismiss()
     toggleRow('#omnivore-edit-title-row')
 
@@ -682,6 +704,7 @@
   }
 
   function getRandomColor() {
+    console.log('toast.js-13-getRandomColor',)
     const colors = [
       '#FF5D99',
       '#7CFF7B',
@@ -695,6 +718,7 @@
   }
 
   function getTempUUID() {
+    console.log('toast.js-12-getTempUUID',)
     return ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, (c) =>
       (
         c ^
@@ -704,6 +728,7 @@
   }
 
   function addLabel(labelList, labelInput, labelValue) {
+    console.log('toast.js-11-addLabel',)
     // first check if the label is already entered:
     const existingLabel = labels.find((l) => l.name === labelValue)
     const labelID = existingLabel ? existingLabel.id : getTempUUID()
@@ -793,6 +818,7 @@
   }
 
   function removeLabel(labelList, labelID) {
+    console.log('toast.js-10-removeLabel',)
     const form = labelList.closest('#omnivore-edit-labels-form')
     const element = labelList.querySelector(`[data-label-id='${labelID}']`)
     if (element) {
@@ -813,6 +839,7 @@
   }
 
   function syncLabelChanges() {
+    console.log('toast.js-9-syncLabelChanges',)
     updateStatusBox(
       '#omnivore-edit-labels-status',
       'loading',
@@ -838,6 +865,7 @@
   }
 
   async function editLabels() {
+    console.log('toast.js-8-editLabels',)
     cancelAutoDismiss()
 
     await getStorageItem('labels').then((cachedLabels) => {
@@ -880,6 +908,7 @@
   }
 
   async function updateLabels(filterValue) {
+    console.log('toast.js-7-updateLabels',)
     const list = currentToastEl.shadowRoot.querySelector(
       '#omnivore-edit-labels-list'
     )
@@ -911,6 +940,7 @@
   }
 
   function readNow() {
+    console.log('toast.js-6-readNow',)
     cancelAutoDismiss()
     const container = currentToastEl.shadowRoot.querySelector(
       '#omnivore-toast-container'
@@ -934,6 +964,7 @@
   }
 
   function archive(event) {
+    console.log('toast.js-5-archive',)
     browserApi.runtime.sendMessage({
       action: ACTIONS.Archive,
       payload: {
@@ -945,6 +976,7 @@
   }
 
   function deleteItem(event) {
+    console.log('toast.js-4-deleteItem',)
     browserApi.runtime.sendMessage({
       action: ACTIONS.Delete,
       payload: {
@@ -956,16 +988,19 @@
   }
 
   function openMenu() {
+    console.log('toast.js-3-openMenu',)
     cancelAutoDismiss()
     toggleRow('#omnivore-extra-buttons-row')
   }
 
   function closeToast() {
+    console.log('toast.js-2',)
     currentToastEl.remove()
     currentToastEl = undefined
   }
 
   function login() {
+    console.log('toast.js-1',)
     window.open(new URL(`/login`, ctx.omnivoreURL), '_blank')
     setTimeout(closeToast, 2000)
   }

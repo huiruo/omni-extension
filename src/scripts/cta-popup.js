@@ -1,6 +1,7 @@
 'use strict';
 
 (function () {
+  console.log('cta-popup==>',)
   const urlSearch = window.location.search;
 
   const urlMatch = urlSearch.match(/[?&]url=([^&]+)/);

@@ -19,6 +19,7 @@
   )
 
   async function grabPdfContent() {
+    console.log('grabPdfContent==>',)
     const fileExtension = window.location.pathname.slice(-4).toLowerCase()
     const hasPdfExtension = fileExtension === '.pdf'
     const pdfContentTypes = [
@@ -63,6 +64,7 @@
   }
 
   function prepareContentPostItem(itemEl) {
+    console.log('prepareContentPostItem==>',)
     const lowerTagName = itemEl.tagName.toLowerCase()
 
     if (lowerTagName === 'iframe') {
@@ -129,6 +131,7 @@
   }
 
   function prepareContentPostScroll() {
+    console.log('prepareContentPostScroll==>',)
     const contentCopyEl = document.createElement('div')
     contentCopyEl.style.position = 'absolute'
     contentCopyEl.style.left = '-2000px'
@@ -156,6 +159,7 @@
   }
 
   function createBackdrop() {
+    console.log('createBackdrop==>',)
     const backdropEl = document.createElement('div')
     backdropEl.className = 'webext-omnivore-backdrop'
     backdropEl.style.cssText = `all: initial !important;
@@ -175,6 +179,7 @@
   }
 
   const getQuoteText = (containerNode) => {
+    console.log('getQuoteText==>',)
     const nonParagraphTagsRegEx =
       /^(a|b|basefont|bdo|big|em|font|i|s|small|span|strike|strong|su[bp]|tt|u|code|mark)$/i
 
@@ -212,6 +217,7 @@
   }
 
   const markHighlightSelection = () => {
+    console.log('markHighlightSelection==>',)
     // First remove any previous markers, this would only normally happen during debugging
     try {
       const markers = window.document.querySelectorAll(
@@ -258,6 +264,7 @@
   }
 
   function clearExistingBackdrops() {
+    console.log('clearExistingBackdrops->',)
     const backdropCol = document.querySelectorAll('.webext-omnivore-backdrop')
     for (let i = 0; i < backdropCol.length; i++) {
       const backdropEl = backdropCol[i]
@@ -285,11 +292,11 @@
       console.log('error checking url')
     }
 
-    console.log('get content: ', createHighlight)
+    console.log('prepareContent==>get content: ', createHighlight)
     if (createHighlight) {
-      console.log('creating highlight while saving')
+      console.log('prepareContent==>creating highlight while saving')
       const highlightSelection = markHighlightSelection()
-      console.log('highlightSelection', highlightSelection)
+      console.log('prepareContent==>highlightSelection', highlightSelection)
     }
 
     async function scrollPage(url) {
@@ -333,6 +340,8 @@
     await scrollPage(url)
 
     clearExistingBackdrops()
+
+    console.log('prepareContent==>parse-1:',prepareContentPostScroll())
     return { type: 'html', content: prepareContentPostScroll() }
   }
 

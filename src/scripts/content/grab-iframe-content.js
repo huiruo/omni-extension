@@ -11,6 +11,7 @@
   const allowCurrentUrl = allowedURLs.test(currentUrl);
   if (!allowCurrentUrl) return;
 
+  console.log('grab-ifame-调用-runtime-sendMessage:',ACTIONS.AddIframeContent)
   browserApi.runtime.sendMessage({
     forwardToTab: true,
     action: ACTIONS.AddIframeContent,

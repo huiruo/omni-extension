@@ -1,4 +1,5 @@
 function gqlRequest(apiUrl, query) {
+  console.log('req-1',)
   return getStorageItem('apiKey')
     .then((apiKey) => {
       const auth = apiKey ? { Authorization: apiKey } : {}
@@ -25,6 +26,7 @@ function gqlRequest(apiUrl, query) {
 }
 
 async function updateLabelsCache(apiUrl, tab) {
+  console.log('req-2',)
   const query = JSON.stringify({
     query: `query GetLabels {
       labels {
@@ -64,6 +66,7 @@ async function updateLabelsCache(apiUrl, tab) {
 }
 
 async function updatePageTitle(apiUrl, pageId, title) {
+  console.log('req-3',)
   const mutation = JSON.stringify({
     query: `mutation UpdatePage($input: UpdatePageInput!) {
       updatePage(input: $input) {
@@ -99,6 +102,7 @@ async function updatePageTitle(apiUrl, pageId, title) {
 }
 
 async function setLabels(apiUrl, pageId, labels) {
+  console.log('req-4',)
   const mutation = JSON.stringify({
     query: `mutation SetLabels($input: SetLabelsInput!) {
       setLabels(input: $input) {
@@ -139,6 +143,7 @@ async function setLabels(apiUrl, pageId, labels) {
 }
 
 async function appendLabelsToCache(labels) {
+  console.log('req-5',)
   const cachedLabels = await getStorageItem('labels')
   if (cachedLabels) {
     labels.forEach((l) => {
@@ -161,6 +166,7 @@ async function appendLabelsToCache(labels) {
 }
 
 async function addNote(apiUrl, pageId, noteId, shortId, note) {
+  console.log('req-6',)
   const query = JSON.stringify({
     query: `query GetArticle(
       $username: String!
@@ -278,6 +284,7 @@ async function addNote(apiUrl, pageId, noteId, shortId, note) {
 }
 
 async function archive(apiUrl, pageId) {
+  console.log('req-7',)
   const mutation = JSON.stringify({
     query: `mutation SetLinkArchived($input: ArchiveLinkInput!) {
       setLinkArchived(input: $input) {
@@ -313,6 +320,7 @@ async function archive(apiUrl, pageId) {
 }
 
 async function deleteItem(apiUrl, pageId) {
+  console.log('req-8',)
   const mutation = JSON.stringify({
     query: `mutation SetBookmarkArticle($input: SetBookmarkArticleInput!) {
       setBookmarkArticle(input: $input) {

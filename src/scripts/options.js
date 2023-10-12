@@ -1,4 +1,5 @@
 function saveAPIKey() {
+  console.log('options-->1',)
   var apiKey = document.getElementById('api-key').value
   if (!apiKey) {
     alert(
@@ -15,6 +16,7 @@ function saveAPIKey() {
 }
 
 function loadAPIKey() {
+  console.log('options-->2',)
   getStorageItem('apiKey').then((apiKey) => {
     if (apiKey) {
       document.getElementById('api-key').value = apiKey
@@ -25,6 +27,7 @@ function loadAPIKey() {
 }
 
 function clearAPIKey() {
+  console.log('options-->3',)
   document.getElementById('api-key').value = ''
 
   setStorage({
@@ -35,6 +38,7 @@ function clearAPIKey() {
 }
 
 function autoDismissChanged(event) {
+  console.log('options-->4',)
   const value = document.getElementById('disable-auto-dismiss').checked
   console.log(
     ' value: ',

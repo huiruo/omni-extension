@@ -80,6 +80,7 @@ window.SAVE_PAGE_QUERY = `mutation SavePage ($input: SavePageInput!) {
 }`
 
 function handleBackendUrl(url) {
+  console.log('common-5',)
   try {
     const FORCE_CONTENT_FETCH_URLS = [
       // twitter status url regex
@@ -95,6 +96,7 @@ function handleBackendUrl(url) {
 
 /* storage helper functions */
 function getStorage(keyOrKeys) {
+  console.log('common-4',)
   return new Promise((resolve) => {
     browserApi.storage.local.get(keyOrKeys || null, (result) => {
       resolve(result || {})
@@ -103,6 +105,7 @@ function getStorage(keyOrKeys) {
 }
 
 function getStorageItem(singleKey) {
+  console.log('common-3:',singleKey)
   return new Promise((resolve) => {
     browserApi.storage.local.get(singleKey, (result) => {
       const finalResult = (result && result[singleKey]) || null
@@ -112,12 +115,14 @@ function getStorageItem(singleKey) {
 }
 
 function setStorage(itemsToSet) {
+  console.log('common-2',)
   return new Promise((resolve) => {
     browserApi.storage.local.set(itemsToSet, resolve)
   })
 }
 
 function removeStorage(itemsToRemove) {
+  console.log('common-1',)
   return new Promise((resolve) => {
     browserApi.storage.local.remove(itemsToRemove, resolve)
   })
